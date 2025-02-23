@@ -56,7 +56,7 @@ class BuyStockView(APIView):
 
         stock = Stock.objects.get(id=stock_id)
         stock_price = stock.price
-        total_price = stock_price * quantity
+        total_price = stock_price * int(quantity)
 
         # Check if user has enough balance
         user_profile = UserProfile.objects.get(user=user)
