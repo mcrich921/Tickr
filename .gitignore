@@ -3,3 +3,5 @@ env/
 *.sqlite3
 *.pyc
 __pycache__
+backend/backend/__pycache__/urls.cpython-313.pyc
+backend/api/migrations/0002_stock_transaction_userprofile_delete_note.py
