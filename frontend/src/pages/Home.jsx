@@ -1,8 +1,13 @@
+import StockSearch from "../components/StockSearch";
+
 function Home() {
   return (
-    <div>
-      <h1>Home</h1>
-    </div>
+    <>
+      <StockSearch />
+      <div>
+        <h1>Home</h1>
+      </div>
+    </>
   );
 }
 
