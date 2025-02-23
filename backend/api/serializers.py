@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
-from .models import Note
+from .models import UserProfile, Stock, Transaction
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -13,4 +13,18 @@ class UserSerializer(serializers.ModelSerializer):
         user = User.objects.create_user(**validated_data)
         return user
 
-    
+class UserProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserProfile
+        fields = ['user', 'balance']
+
+class StockSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Stock
+        fields = ['id', 'ticker', 'name', 'price']
+
+class TransactionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Transaction
+        fields = ['id', 'user', 'stock', 'transaction_type', 'quantity', 'price', 'timestamp']
+        read_only_fields = ['user', 'timestamp']
