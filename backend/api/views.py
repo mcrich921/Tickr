@@ -1,5 +1,5 @@
-from django.shortcuts import render
 from django.contrib.auth.models import User
+from django.shortcuts import get_object_or_404
 from .models import Stock, Transaction, UserProfile
 from .serializers import UserSerializer, StockSerializer, TransactionSerializer
 from rest_framework import generics, status
@@ -19,10 +19,31 @@ class StockListView(generics.ListAPIView):
     serializer_class = StockSerializer
     permission_classes = [IsAuthenticated]
 
+import yfinance as yf
+
 class StockDetailView(generics.RetrieveAPIView):
     queryset = Stock.objects.all()
     serializer_class = StockSerializer
     permission_classes = [IsAuthenticated]
+
+    def get(self, request, *args, **kwargs):
+        ticker = kwargs.get("ticker")
+
+        # Try to get stock in database
+        stock = Stock.objects.filter(ticker=ticker).first()
+
+        try:
+            ticker_info = yf.Ticker(ticker)
+            stock_price = ticker_info.history(period="1d")["Close"].iloc[-1]
+            if not stock:
+                stock = Stock.objects.create(ticker=ticker, price=stock_price, name=ticker_info.info['longName'])
+            else:
+                stock.price = stock_price
+                stock.save()
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+        return Response(StockSerializer(stock).data)
 
 # Transaction Views
 class BuyStockView(APIView):
