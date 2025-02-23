@@ -1,5 +1,5 @@
 from django.urls import path
-from views import  (StockListView,
+from .views import  (StockListView,
                     StockDetailView,
                     BuyStockView,
                     SellStockView,
