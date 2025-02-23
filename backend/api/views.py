@@ -1,7 +1,6 @@
 from django.contrib.auth.models import User
-from django.shortcuts import get_object_or_404
 from .models import Stock, Transaction, UserProfile
-from .serializers import UserSerializer, StockSerializer, TransactionSerializer
+from .serializers import UserProfileSerializer, UserSerializer, StockSerializer, TransactionSerializer
 from rest_framework import generics, status
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.views import APIView
@@ -109,6 +108,14 @@ class SellStockView(APIView):
 
         return Response(TransactionSerializer(transaction).data, status=status.HTTP_201_CREATED)
     
+class UserProfileView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        user = request.user
+        user_profile = UserProfile.objects.get(user=user)
+        return Response(UserProfileSerializer(user_profile).data)
+
 class UserTransactionsView(generics.ListAPIView):
     serializer_class = TransactionSerializer
     permission_classes = [IsAuthenticated]

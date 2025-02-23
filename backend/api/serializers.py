@@ -14,9 +14,11 @@ class UserSerializer(serializers.ModelSerializer):
         return user
 
 class UserProfileSerializer(serializers.ModelSerializer):
+    username = serializers.CharField(source='user.username', read_only=True)
+
     class Meta:
         model = UserProfile
-        fields = ['user', 'balance']
+        fields = ['user', 'balance', 'username']
 
 class StockSerializer(serializers.ModelSerializer):
     class Meta:
