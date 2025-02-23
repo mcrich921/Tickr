@@ -29,7 +29,14 @@ function App() {
             </ProtectedRoute>
           }
         />
-        <Route path="/stocks/:ticker" element={<StockDetail />} />
+        <Route
+          path="/stocks/:ticker"
+          element={
+            <ProtectedRoute>
+              <StockDetail />
+            </ProtectedRoute>
+          }
+        />
         <Route path="/login" element={<Login />} />
         <Route path="/logout" element={<Logout />} />
         <Route path="/register" element={<RegisterAndLogout />} />

@@ -33,6 +33,7 @@ function Home() {
         <h1>Welcome, {userProfile.username}!</h1>
         <p>Balance: ${userProfile.balance}</p>
       </div>
+      <Link to="/logout">Logout</Link>
     </div>
   );
 }
