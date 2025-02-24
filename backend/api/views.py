@@ -64,6 +64,7 @@ class BuyStockView(APIView):
         # Check if user has enough balance
         user_profile = UserProfile.objects.get(user=user)
         if user_profile.balance < total_price:
+            print(total_price)
             return Response({"message": "Insufficient balance"}, status=status.HTTP_400_BAD_REQUEST)
         
         # Create transaction
@@ -74,6 +75,19 @@ class BuyStockView(APIView):
             quantity=quantity,
             price=stock_price
         )
+
+        # Update or create portfolio entry
+        portfolio_item, created = Portfolio.objects.get_or_create(user=user, stock=stock, defaults={
+            "quantity": quantity,
+            "purchase_price": stock_price
+        })
+
+        if not created:
+            # Update quantity and adjust the average purchase price
+            total_shares = portfolio_item.quantity + int(quantity)
+            portfolio_item.purchase_price = ((portfolio_item.purchase_price * portfolio_item.quantity) + (stock_price * int(quantity))) / total_shares
+            portfolio_item.quantity = total_shares
+            portfolio_item.save()
 
         user_profile.balance -= total_price
         user_profile.save()
