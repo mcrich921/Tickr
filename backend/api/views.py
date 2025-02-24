@@ -1,6 +1,10 @@
 from django.contrib.auth.models import User
-from .models import Stock, Transaction, UserProfile
-from .serializers import UserProfileSerializer, UserSerializer, StockSerializer, TransactionSerializer
+from .models import Stock, Transaction, UserProfile, Portfolio
+from .serializers import (UserProfileSerializer,
+                          UserSerializer,
+                          StockSerializer,
+                          TransactionSerializer,
+                          PortfolioSerializer)
 from rest_framework import generics, status
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.views import APIView
@@ -122,3 +126,10 @@ class UserTransactionsView(generics.ListAPIView):
 
     def get_queryset(self):
         return Transaction.objects.filter(user=self.request.user)
+    
+class UserPortfolioView(generics.ListAPIView):
+    serializer_class = PortfolioSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return Portfolio.objects.filter(user=self.request.user)

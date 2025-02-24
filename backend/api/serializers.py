@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
-from .models import UserProfile, Stock, Transaction
+from .models import UserProfile, Stock, Transaction, Portfolio
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -30,3 +30,11 @@ class TransactionSerializer(serializers.ModelSerializer):
         model = Transaction
         fields = ['id', 'user', 'stock', 'transaction_type', 'quantity', 'price', 'timestamp']
         read_only_fields = ['user', 'timestamp']
+
+class PortfolioSerializer(serializers.ModelSerializer):
+    stock_ticker = serializers.CharField(source="stock.ticker", read_only=True)
+    stock_name = serializers.CharField(source="stock.name", read_only=True)
+
+    class Meta:
+        model = Portfolio
+        fields = ['id', 'user', 'stock', 'stock_ticker', 'stock_name', 'quantity', 'purchase_price']

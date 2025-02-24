@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Stock, Transaction, UserProfile
+from .models import Stock, Transaction, UserProfile, Portfolio
 
 class StockAdmin(admin.ModelAdmin):
     list_display = ('ticker', 'name', 'price')  # Shows these fields in the list view
@@ -15,7 +15,11 @@ class UserProfileAdmin(admin.ModelAdmin):
     search_fields = ('user__username',)  # Allow searching by username
     ordering = ('user',)  # Default ordering by username
 
+class PortfolioAdmin(admin.ModelAdmin):
+    list_display = ('user', 'stock', 'quantity', 'purchase_price')
+
 admin.site.register(UserProfile, UserProfileAdmin)
+admin.site.register(Portfolio, PortfolioAdmin)
 
 admin.site.register(Stock, StockAdmin)
 admin.site.register(Transaction, TransactionAdmin)

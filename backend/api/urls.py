@@ -4,7 +4,8 @@ from .views import  (StockListView,
                     BuyStockView,
                     SellStockView,
                     UserProfileView,
-                    UserTransactionsView)
+                    UserTransactionsView,
+                    UserPortfolioView)
 
 urlpatterns = [
     # Stock Views
@@ -16,4 +17,6 @@ urlpatterns = [
     path("transactions/", UserTransactionsView.as_view(), name="transactions"),
     # User Info View
     path('profile/', UserProfileView.as_view(), name='user_profile'),
+    path('profile/portfolio/', UserPortfolioView.as_view(), name='user_portfolio'),
+
 ]

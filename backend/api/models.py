@@ -33,6 +33,22 @@ class Transaction(models.Model):
     def __str__(self):
         return f'{self.user.username} - {self.transaction_type} {self.quantity} {self.stock.ticker} @ {self.price}'
 
+class Portfolio(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    stock = models.ForeignKey(Stock, on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField()
+    purchase_price = models.DecimalField(max_digits=10, decimal_places=2)
+    
+    # calculate avg price if user buys more stocks
+    def update_purchase(self, new_quantity, new_price):
+        total_cost = (self.quantity * self.purchase_price) + (new_quantity * new_price)
+        self.quantity += new_quantity
+        self.purchase_price = total_cost / self.quantity
+        self.save()
+
+    def __str__(self):
+        return f'{self.user.username} owns {self.quantity} {self.stock.ticker} @ {self.purchase_price}'
+
 # Auto-create UserProfile when a new User is registered
 from django.db.models.signals import post_save
 from django.dispatch import receiver
