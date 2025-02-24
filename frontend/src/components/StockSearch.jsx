@@ -5,8 +5,8 @@ import "../styles/StockSearch.css";
 
 function StockSearch() {
   const [searchQuery, setSearchQuery] = useState("");
-  const [stockData, setStockData] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
   const navigate = useNavigate();
 
   const handleSearch = async () => {
@@ -15,14 +15,20 @@ function StockSearch() {
     setLoading(true);
     try {
       const response = await api.get(`/api/stocks/${searchQuery}/`);
-      setStockData(response.data);
       // If stock exists, navigate to the StockDetail page
       navigate(`/stocks/${response.data.ticker}`);
     } catch (error) {
-      console.error("Error fetching stock data:", error);
-      setStockData(null); // If no stock found, set to null
+      setError("Stock not found");
+      console.log(error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleKeyPress = (e) => {
+    setError(null);
+    if (e.key === "Enter") {
+      handleSearch();
     }
   };
 
@@ -33,7 +39,9 @@ function StockSearch() {
         placeholder="Search for a stock..."
         value={searchQuery}
         onChange={(e) => setSearchQuery(e.target.value)}
+        onKeyDown={handleKeyPress}
       />
+      {error && <p className="error-message">{error}</p>}
       <button onClick={handleSearch} disabled={loading}>
         {loading ? "Loading..." : "Search"}
       </button>
