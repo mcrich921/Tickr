@@ -60,28 +60,45 @@ pip install -r requirements.txt
 ### 4. Connect to PostgreSQL Database 🗄️
 To connect your app to a PostgreSQL database, follow these steps:
 
-Install PostgreSQL: If you don't already have PostgreSQL installed, follow the instructions on the [PostgreSQL website](https://www.postgresql.org/download/).
+**Install PostgreSQL:** If you don't already have PostgreSQL installed, follow the instructions on the [PostgreSQL website](https://www.postgresql.org/download/).
 
-Create a Database: Once installed, create a new database for the project by running the following command:
+**Create a Database:** Once installed, create a new database and user for the project by running the following commands:
 
 ```bash
 psql -U postgres
 CREATE DATABASE mock_trading;
+CREATE USER your_username WITH PASSWORD 'your_password';
+GRANT ALL PRIVILEGES ON DATABASE your_database_name TO your_user_name;
+\q
 ```
-Update Database Configuration:
+**Update Database Configuration:**
 
 Find database config file at tickr/backend/backend/settings.py
+
 Update the PostgreSQL connection settings with your database credentials.
 
-```env
-DB_HOST=localhost
-DB_PORT=5432
-DB_NAME=mock_trading
-DB_USER=your_username
-DB_PASSWORD=your_password
+```python
+DATABASES = {
+    'default' : {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'mock_trading',      
+        'USER': 'your_username',          
+        'PASSWORD': 'your_password',               
+        'HOST': 'localhost',          
+        'PORT': '5432',         # Default PostgreSQL port   
+    }
+}
 ```
 
-Run Migrations from tickr/backend:
+If you are running into issues, check what port your PostgreSQL is running on by doing:
+```bash
+psql -U postgres
+SHOW port;
+```
+And update the PORT accordingly.
+
+**Run Migrations from tickr/backend:**
+This will update your database with the built Django database.
 
 ```bash
 python manage.py migrate
