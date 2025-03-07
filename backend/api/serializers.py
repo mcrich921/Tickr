@@ -26,9 +26,12 @@ class StockSerializer(serializers.ModelSerializer):
         fields = ['id', 'ticker', 'name', 'price']
 
 class TransactionSerializer(serializers.ModelSerializer):
+    stock_name = serializers.CharField(source="stock.name", read_only=True)
+    stock_ticker = serializers.CharField(source="stock.ticker", read_only=True)
+
     class Meta:
         model = Transaction
-        fields = ['id', 'user', 'stock', 'transaction_type', 'quantity', 'price', 'timestamp']
+        fields = ['id', 'user', 'stock', 'stock_name', 'stock_ticker', 'transaction_type', 'quantity', 'price', 'timestamp']
         read_only_fields = ['user', 'timestamp']
 
 class PortfolioSerializer(serializers.ModelSerializer):
