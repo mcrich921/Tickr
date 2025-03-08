@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import api from "../api"; // Ensure correct import
+import api from "../api";
+import "../styles/TransactionHistory.css";
 
 function TransactionHistory({ userProfile }) {
   const [transactionHistory, setTransactionHistory] = useState([]);
@@ -9,10 +10,13 @@ function TransactionHistory({ userProfile }) {
   useEffect(() => {
     const fetchUserTransactions = async () => {
       if (userProfile) {
-        // Ensure userProfile exists and has an ID
         try {
-          const response = await api.get(`/api/transactions/`);
-          setTransactionHistory(response.data);
+          const response = await api.get("/api/transactions/");
+          // Sort transactions by date by newest first
+          const sortedTransactions = response.data.sort(
+            (a, b) => new Date(b.timestamp) - new Date(a.timestamp)
+          );
+          setTransactionHistory(sortedTransactions);
           setLoading(false);
         } catch (err) {
           console.error("Error fetching transactions:", err);
@@ -25,41 +29,55 @@ function TransactionHistory({ userProfile }) {
     fetchUserTransactions();
   }, [userProfile]);
 
-  useEffect(() => {
-    console.log(transactionHistory);
-  }, [transactionHistory]);
-
   if (loading) return <div>Loading transactions...</div>;
   if (error) return <div>{error}</div>;
 
   return (
-    <div>
+    <div className="transaction-container">
       <h2>Transaction History</h2>
       {transactionHistory.length > 0 ? (
-        <ul>
-          {transactionHistory.map((tx, index) => {
-            const formattedDate = new Date(tx.timestamp).toLocaleString(
-              "en-US",
-              {
-                year: "numeric",
-                month: "long",
-                day: "numeric",
-                hour: "numeric",
-                minute: "numeric",
-                second: "numeric",
-                hour12: true, // Ensures AM/PM format
-              }
-            );
+        <table className="transaction-table">
+          <thead>
+            <tr>
+              <th>Stock</th>
+              <th>Type</th>
+              <th>Quantity</th>
+              <th>Price</th>
+              <th>Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            {transactionHistory.map((tx, index) => {
+              const formattedDate = new Date(tx.timestamp).toLocaleString(
+                "en-US",
+                {
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                  hour: "numeric",
+                  minute: "numeric",
+                  second: "numeric",
+                  hour12: true,
+                }
+              );
 
-            return (
-              <li key={index}>
-                {tx.stock_ticker} ({tx.stock_name}) - {tx.transaction_type}{" "}
-                {tx.quantity} shares @ ${tx.price} <br />
-                <small>{formattedDate}</small>
-              </li>
-            );
-          })}
-        </ul>
+              return (
+                <tr
+                  key={index}
+                  className={tx.transaction_type === "BUY" ? "buy" : "sell"}
+                >
+                  <td>
+                    {tx.stock_ticker} ({tx.stock_name})
+                  </td>
+                  <td>{tx.transaction_type}</td>
+                  <td>{tx.quantity}</td>
+                  <td>${tx.price}</td>
+                  <td>{formattedDate}</td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
       ) : (
         <p>No transactions found.</p>
       )}
