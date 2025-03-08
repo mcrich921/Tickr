@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import StockSearch from "../components/StockSearch";
+import TransactionHistory from "../components/TransactionHistory";
 import api from "../api"; // Assuming you have an API helper
 
 function Home() {
@@ -40,10 +41,10 @@ function Home() {
     fetchUserPortfolio();
   }, [userProfile]);
 
-  // Check portfolio
-  useEffect(() => {
-    console.log(portfolio);
-  }, [portfolio]);
+  // Check portfolio - for debugging
+  // useEffect(() => {
+  //   console.log(userProfile);
+  // }, [userProfile]);
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>{error}</div>;
@@ -70,6 +71,7 @@ function Home() {
       </ul>
 
       <StockSearch />
+      <TransactionHistory userProfile={userProfile} />
       <Link to="/logout">Logout</Link>
     </div>
   );
