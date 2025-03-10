@@ -35,7 +35,7 @@ function TransactionHistory({ userProfile }) {
       // turn values into date objects
       aVal = new Date(aVal);
       bVal = new Date(bVal);
-    } else {
+    } else if (typeof aVal == "string") {
       // turn values to lowercase for case-insensitive sorting
       aVal = aVal.toLowerCase();
       bVal = bVal.toLowerCase();
@@ -114,6 +114,13 @@ function TransactionHistory({ userProfile }) {
                   }}
                 >
                   Stock
+                  {sortConfig.key === "stock_name" && (
+                    <img
+                      src={`/src/assets/sort_asc_transparent.png`}
+                      alt="Sort"
+                      className={`sort-icon ${sortConfig.direction}`}
+                    />
+                  )}
                 </th>
                 <th
                   onClick={() => {
@@ -121,6 +128,13 @@ function TransactionHistory({ userProfile }) {
                   }}
                 >
                   Type
+                  {sortConfig.key === "transaction_type" && (
+                    <img
+                      src={`/src/assets/sort_asc_transparent.png`}
+                      alt="Sort"
+                      className={`sort-icon ${sortConfig.direction}`}
+                    />
+                  )}
                 </th>
                 <th
                   onClick={() => {
@@ -128,6 +142,13 @@ function TransactionHistory({ userProfile }) {
                   }}
                 >
                   Quantity
+                  {sortConfig.key === "quantity" && (
+                    <img
+                      src={`/src/assets/sort_asc_transparent.png`}
+                      alt="Sort"
+                      className={`sort-icon ${sortConfig.direction}`}
+                    />
+                  )}
                 </th>
                 <th
                   onClick={() => {
@@ -135,6 +156,13 @@ function TransactionHistory({ userProfile }) {
                   }}
                 >
                   Price
+                  {sortConfig.key === "price" && (
+                    <img
+                      src={`/src/assets/sort_asc_transparent.png`}
+                      alt="Sort"
+                      className={`sort-icon ${sortConfig.direction}`}
+                    />
+                  )}
                 </th>
                 <th
                   onClick={() => {
@@ -142,6 +170,13 @@ function TransactionHistory({ userProfile }) {
                   }}
                 >
                   Date
+                  {sortConfig.key === "timestamp" && (
+                    <img
+                      src={`/src/assets/sort_asc_transparent.png`}
+                      alt="Sort"
+                      className={`sort-icon ${sortConfig.direction}`}
+                    />
+                  )}
                 </th>
               </tr>
             </thead>
