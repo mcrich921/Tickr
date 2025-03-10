@@ -46,3 +46,15 @@
   background-color: #ccc;
   cursor: not-allowed;
 }
+
+.sort-icon {
+  width: auto;
+  height: 16px;
+  margin-left: 5px;
+  cursor: pointer;
+  /* transition: transform 0.2s ease-in-out; */
+}
+
+.desc {
+  transform: rotate(180deg);
+}
